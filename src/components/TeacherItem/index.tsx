@@ -1,34 +1,56 @@
 import React from 'react';
+import api from '../../services/api';
 
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
 
-function TeacherItem(){
+export interface Teacher {
+    id: number,
+    avatar: string,
+    bio: string,
+    cost: number,
+    name: string,
+    subject: string,
+    whatsapp: string
+}
+
+export interface TeacherItemProps {
+    teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({teacher})=>{
+
+    function createNewConnection(){
+        api.post('connections', {
+            user_id: teacher.id
+        })
+    }
+
     return(
         <article className="teacher-item">
             <header>
-                <img src="https://avatars2.githubusercontent.com/u/41237418?s=460&u=ba115d05384f88035dcc44aa0f318d2b94b44e6c&v=4" alt="Michel Lima"/>
+                <img src={teacher.avatar} alt="Michel Lima"/>
                 <div>
-                    <strong> Michel Lima </strong>
-                    <span> Progrador front-end </span>
+                    <strong> {teacher.name} </strong>
+                    <span> { teacher.subject } </span>
                 </div>
             </header>
 
             <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed efficitur nisl. Vivamus id turpis commodo, vulputate augue ac, semper lorem. Nullam urna justo, pellentesque id arcu nec, ultricies varius sem. 
+            {teacher.bio}
             </p>
 
             <footer>
                 <p>
                     Preço/hora
-                    <strong>R$ 80,00</strong>
+                    <strong> { teacher.cost } </strong>
                 </p>
 
-                <button type="button">
+                <a href={`https://wa.me/${teacher.whatsapp}`} target="_blank" onClick={createNewConnection}>
                     <img src={whatsappIcon} alt="Whatsapp"/>
                     Entrar em contato
-                </button>
+                </a>
             </footer>
         </article>
     )
